@@ -5,23 +5,29 @@
 <!-- Mirrored from themesbrand.com/skote/layouts/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Nov 2022 07:57:53 GMT -->
 
 <head>
-
+    <base href="{{ url('/') }}/">
     <meta charset="utf-8" />
     <title>Logistik</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
+  
+   
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
-
+    
+    <link href="{{ asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Bootstrap Css -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+ 
 
     @livewireStyles
+ 
 </head>
 
 <body data-sidebar="dark" data-layout-mode="light">
@@ -230,7 +236,7 @@
 
 
                         <li>
-                            <a wire:navigate href="/dashboard" class="waves-effect">
+                            <a wire:navigate href="{{route('dashboard.index') }}" class="waves-effect">
                                 <i class="bx bx-chat"></i>
                                 <span key="t-chat">Dashboard</span>
                             </a>
@@ -242,8 +248,8 @@
                                 <span key="t-dashboards">Data Master</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a wire:navigate href="/barang" key="t-tui-calendar">Barang</a></li>
-                                <li><a wire:navigate href="/category" key="t-full-calendar">Jenis Barang</a>
+                                <li><a wire:navigate href="{{ route('barang.index') }}" key="t-tui-calendar">Barang</a></li>
+                                <li><a wire:navigate href="{{ route('category.index') }}"  key="t-full-calendar">Jenis Barang</a>
                                 </li>
                             </ul>
                         </li>
@@ -387,16 +393,22 @@
         });
     </script>
 
+   
+
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
-
+    {{-- <script src="{{asset('assets/js/pages/form-advanced.init.js')}}"></script> --}}
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
+    <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery.repeater/jquery.repeater.min.js')}}"></script>
+    <script src="{{ asset('assets/js/pages/form-repeater.int.js')}}"></script>
     
+
 </body>
 
 <!-- Mirrored from themesbrand.com/skote/layouts/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Nov 2022 07:57:53 GMT -->

@@ -10,12 +10,13 @@ use Livewire\WithPagination;
 class Index extends Component
 {
         
-  use WithPagination;
-  public $search = '';
+    use WithPagination;
+    public $search = '';
     public $barang_id, $kode_barang, $nama_barang, $category_code, $stok, $harga, $deskripsi;
     public $isEdit = false;
 
     public $perPage = 5; // Default menampilkan 10 data
+
 
     // Pastikan saat jumlah perPage diubah, halaman balik ke nomor 1
     public function updatingPerPage()
@@ -23,25 +24,40 @@ class Index extends Component
         $this->resetPage();
     }
     // Fungsi Simpan (Tambah & Update)
+
+public function rules()
+{
+    return [
+        'kode_barang' => 'required|unique:barangs,kode_barang,' . $this->barang_id,
+        'nama_barang' => 'required|',
+        'category_code' => 'required|',
+    ];
+}
+
+public function messages()
+{
+    return [
+        'kode_barang.required' => 'Kode barang wajib diisi!',
+        'kode_barang.unique'   => 'Kode ini sudah terdaftar!',
+        'nama_barang.required' => 'Nama barang tidak boleh kosong!',
+        'category_code.required' => 'Categori tidak boleh kosong!',
+    ];
+}
+
     public function store()
     {
-        $this->validate([
-            'kode_barang'   => 'required|unique:barangs,kode_barang,' . $this->barang_id,
-            'nama_barang'   => 'required',
-            'category_code' => 'required',
-            'stok'          => 'required|numeric',
-            'harga'         => 'required|numeric',
-        ]);
 
-        Barang::updateOrCreate(['id' => $this->barang_id], [
-            'kode_barang'   => $this->kode_barang,
-            'nama_barang'   => $this->nama_barang,
-            'category_code' => $this->category_code,
-            'stok'          => $this->stok,
-            'harga'         => $this->harga,
-            'deskripsi'     => $this->deskripsi,
-        ]);
+   $this->validate();
 
+    // Jika lolos validasi, lanjut simpan
+    Barang::updateOrCreate(['id' => $this->barang_id], [
+        'kode_barang'   => $this->kode_barang,
+        'nama_barang'   => $this->nama_barang,
+        'category_code' => $this->category_code,
+        'stok'          => $this->stok,
+        'harga'         => $this->harga,
+        'deskripsi'     => $this->deskripsi,
+    ]);
         session()->flash('message', $this->isEdit ? 'Data Berhasil Diubah!' : 'Data Berhasil Ditambah!');
         $this->dispatch('close-modal'); // Menutup modal via Alpine
         $this->resetInput();
@@ -49,6 +65,7 @@ class Index extends Component
 
     public function edit($id)
     {
+        $this->resetValidation();
         $barang = Barang::findOrFail($id);
         $this->barang_id    = $id;
         $this->kode_barang  = $barang->kode_barang;

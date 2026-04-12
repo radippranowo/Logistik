@@ -1,4 +1,5 @@
 <div>
+    
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -42,9 +43,8 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="text-sm-end">
-                                <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2"
-                                    onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
-                                    <i class="mdi mdi-plus me-1"></i> Add New Barang
+                                <button wire:navigate href="{{ route('barang.create') }}"  type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2">
+                                    <i class="mdi mdi-plus me-1"></i>Barang
                                 </button>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                                     <th class="align-middle" style="width: 50px;">No</th>
                                     <th class="align-middle">Kode</th>
                                     <th class="align-middle">Nama</th>
-                                    <th class="align-middle">Category</th>
+                                    <th class="align-middle">Categori</th>
                                     <th class="align-middle">Stok</th>
                                     <th class="align-middle">Harga</th>
                                     <th class="align-middle">Deskripsi</th>
@@ -67,17 +67,18 @@
                                 @foreach ($barangs as $item)
                                     <tr>
                                         {{-- Jika pakai pagination, gunakan rumus ini agar nomor berlanjut di halaman berikutnya --}}
-                    <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
+                                        <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
+                                        </td>
                                         <td>{{ $item->kode_barang }}</td>
                                         <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->kategori->nama_category }}</td>
-                                            <td><span class="badge badge-pill badge-soft-info font-size-12">
+                                        <td><span class="badge badge-pill badge-soft-info font-size-12">
                                                 {{ $item->stok ?? 'N/A' }}
                                             </span>
-                                            </td>
+                                        </td>
                                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                                        <td> {{$item->deskripsi}}</td>
-                                        <td>  
+                                        <td> {{ $item->deskripsi }}</td>
+                                        <td>
                                             <div class="d-flex gap-3">
                                                 <a href="javascript:void(0);" wire:click="edit({{ $item->id }})"
                                                     class="text-success"
@@ -96,15 +97,13 @@
                             </tbody>
                         </table>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
 
     <div x-data="{ open: false }" x-init="window.addEventListener('open-tambah-modal', () => { open = true });
-    window.addEventListener('close-modal', () => { open = false });" x-cloak wire:ignore>
+    window.addEventListener('close-modal', () => { open = false });">
 
         <div class="modal fade" :class="open ? 'show d-block' : 'd-none'" x-show="open" @click.self="open = false"
             @keydown.escape.window="open = false" style="background-color: rgba(0,0,0,0.5); z-index: 1060;">
@@ -112,29 +111,55 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ $isEdit ? 'Edit Barang' : 'Add New Barang' }}</h5>
+                        <h5 class="modal-title">{{ $isEdit ? 'Edit Barang' : ' Tambah Barang' }}</h5>
                         <button type="button" class="btn-close" @click="open = false"></button>
                     </div>
-                    <form wire:submit.prevent="store">
+                    <form wire:submit.prevent="store" novalidate>
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label>Kode Barang</label>
-                                    <input type="text" wire:model="kode_barang" class="form-control">
+                                    <label class="form-label">Kode</label>
+                                    <input type="text" wire:model="kode_barang"
+                                        class="form-control @error('kode_barang') is-invalid @enderror"
+                                        placeholder="Masukkan Kode">
+                                    @error('kode_barang')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Nama</label>
+                                    <input type="text" wire:model="nama_barang"
+                                        class="form-control @error('nama_barang') is-invalid @enderror"
+                                        placeholder="Masukkan Nama">
+                                    @error('nama_barang')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label>Nama Barang</label>
-                                    <input type="text" wire:model="nama_barang" class="form-control">
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label>Kategori</label>
-                                    <select class="form-control" wire:model="category_code">
-                                        <option value="">-- Pilih Kategori --</option>
-                                        @foreach ($categories as $cat)
-                                            <option value="{{ $cat->kode_category }}">{{ $cat->nama_category }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Kategori</label>
+
+                                    <div wire:ignore>
+                                        <select id="select2-kategori" wire:model="category_code"
+                                            class="form-control select @error('category_code') is-invalid @enderror">
+
+                                            <option value="">Pilih</option>
+                                            @foreach ($categories as $cat)
+                                                <option value="{{ $cat->kode_category }}">{{ $cat->nama_category }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    @error('category_code')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="col-6 mb-3">
                                     <label>Stok</label>
@@ -159,4 +184,29 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('livewire:navigated', () => { // Gunakan ini jika pakai Livewire 3
+            initSelect2();
+        });
+
+        function initSelect2() {
+            $('#select2-kategori').select2({
+                dropdownParent: $('.modal'), // Agar dropdown muncul di atas modal
+                width: '100%' // Agar lebar select penuh
+            });
+
+            // Sinkronisasi Select2 dengan Livewire
+            $('#select2-kategori').on('change', function(e) {
+                var data = $('#select2-kategori').select2("val");
+                @this.set('category_code', data);
+            });
+        }
+
+        // Inisialisasi ulang saat modal dibuka via Alpine
+        window.addEventListener('open-tambah-modal', () => {
+            setTimeout(() => {
+                initSelect2();
+            }, 100);
+        });
+    </script>
 </div>
