@@ -13,7 +13,7 @@
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
   
-   
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
     
     <link href="{{ asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet" type="text/css" />

@@ -74,27 +74,55 @@ class Index extends Component
         $this->resetInput();
     }
 
-    public function edit($id)
-    {
-        $this->resetValidation();
-        $barang = Barang::findOrFail($id);
-        $this->barang_id    = $id;
-        $this->kode_barang  = $barang->kode_barang;
-        $this->part_number  = $barang->part_number;
-        $this->nama_barang  = $barang->nama_barang;
-        $this->category_code = $barang->category_code;
-        $this->merk_code = $barang->merk_code;
-        $this->group_code = $barang->group_code;
-        $this->stok         = $barang->stok;
-        $this->harga        = $barang->harga;
-        $this->deskripsi    = $barang->deskripsi;
-        $this->isEdit       = true;
-    }
+public function edit($id)
+{
+    $this->resetValidation();
+    $barang = Barang::findOrFail($id);
+    
+    // Mapping data ke properti
+    $this->barang_id     = $id;
+    $this->kode_barang   = $barang->kode_barang;
+    $this->part_number   = $barang->part_number;
+    $this->nama_barang   = $barang->nama_barang;
+    $this->category_code = $barang->category_code;
+    $this->merk_code     = $barang->merk_code;
+    $this->group_code    = $barang->group_code;
+    $this->stok          = $barang->stok;
+    $this->harga         = $barang->harga;
+    $this->deskripsi     = $barang->deskripsi;
+    
+    // Perintah untuk membuka modal secara native
+    $this->dispatch('open-edit-modal'); 
+}
+
+public function update()
+{
+    $this->validate([
+        'kode_barang' => 'required',
+        'nama_barang' => 'required',
+    ]);
+
+    $barang = Barang::findOrFail($this->barang_id);
+    $barang->update([
+        'kode_barang'   => $this->kode_barang,
+        'part_number'   => $this->part_number,
+        'nama_barang'   => $this->nama_barang,
+        'category_code' => $this->category_code,
+        'merk_code'     => $this->merk_code,
+        'group_code'    => $this->group_code,
+        'stok'          => $this->stok,
+        'harga'         => $this->harga,
+        'deskripsi'     => $this->deskripsi,
+    ]);
+
+    $this->dispatch('close-modal'); // Tutup modal setelah simpan
+    $this->dispatch('alert', ['type' => 'success', 'message' => 'Data berhasil diperbarui!']);
+}
 
     public function delete($id)
     {
         Barang::find($id)->delete();
-        session()->flash('message', 'Data Dihapus!');
+        $this->dispatch('swal:success', message: 'Data Barang berhasil dihapus!');
     }
 
     public function resetInput()
@@ -102,16 +130,22 @@ class Index extends Component
         $this->reset(['barang_id', 'kode_barang', 'part_number','nama_barang', 'category_code', 'merk_code', 'group_code', 'stok', 'harga', 'deskripsi', 'isEdit']);
     }
 
-    public function render()
-    {
-        return view('livewire.barang.index', [
-            'barangs' => Barang::with(['kategori', 'merk', 'group']) // Masukkan semua nama relasi dalam array
-                ->where('nama_barang', 'like', '%' . $this->search . '%')
-                ->latest()
-                ->paginate($this->perPage),
-            'categories' => Category::all(),
-            'merks' => Merk::all(),
-            'groups' => Group::all()
-        ]);
+   public function render()
+{
+    // 1. Inisialisasi Query dengan Eager Loading
+    $query = Barang::with(['Kategori', 'Merk', 'Group']);
+
+    // 2. Logika Pencarian: Hanya jalankan FullText jika ada input search
+    // trim() digunakan untuk memastikan bukan sekadar spasi
+    if (trim($this->search) !== '') {
+        $query->whereFullText('nama_barang', $this->search);
     }
+
+    return view('livewire.barang.index', [
+        'barangs' => $query->latest()->paginate($this->perPage),
+        'categories' => Category::all(),
+        'merks' => Merk::all(),
+        'groups' => Group::all()
+    ]);
+}
 }

@@ -52,6 +52,7 @@ class Create extends Component
             'inputs.*.harga' => 'required|numeric',
         ], [
             'inputs.*.kode_barang.required' => 'Kode wajib diisi',
+            'inputs.*.kode_barang.unique' => 'Kode sudah tersedia',
             'inputs.*.part_number.unique' => 'Part number sudah tersedia',
             'inputs.*.nama_barang.required' => 'Nama wajib diisi',
             'inputs.*.category_code' => 'Categori wajib diisi',
@@ -64,9 +65,11 @@ class Create extends Component
 
         foreach ($this->inputs as $item) {
             Barang::create($item);
+            session()->flash('success', 'Data Berhasil Disimpan');
         }
 
        return $this->redirectRoute('barang.index', navigate: true);
+      
     }
 
     public function render()

@@ -1,17 +1,19 @@
 <div>
     <div class="row">
         <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Tambah Barang</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
             <div class="card">
+                <div class="card-body border-bottom">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0 card-title flex-grow-1">Data Barang</h5>
+                        <div class="flex-shrink-0">
+                            <button wire:navigate href="{{ route('barang.index') }}" type="button"
+                                class="btn btn-primary btn-rounded waves-effect waves-light mb-2">
+                                <i class="mdi mdi-arrow-left me-1"></i>Kembali
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
-
                     <form class="repeater" wire:submit.prevent="save">
                         <div class="table-responsive">
                             <table class="table table-bordered table-nowrap align-middle mb-0">
@@ -67,7 +69,8 @@
                                                     @endforeach
                                                 </select>
                                                 @error('inputs.' . $index . '.category_code')
-                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}
+                                                    </div>
                                                 @enderror
 
                                             </td>
@@ -81,7 +84,8 @@
                                                     @endforeach
                                                 </select>
                                                 @error('inputs.' . $index . '.merk_code')
-                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}
+                                                    </div>
                                                 @enderror
 
                                             </td>
@@ -95,7 +99,8 @@
                                                     @endforeach
                                                 </select>
                                                 @error('inputs.' . $index . '.group_code')
-                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}
+                                                    </div>
                                                 @enderror
 
                                             </td>
@@ -132,11 +137,12 @@
 
                         <div class="mt-4 d-flex justify-content-between">
                             <button data-repeater-create type="button" wire:click="addInput"
-                                class="btn btn-success btn-label waves-effect waves-light">
-                                <i class="bx bx-plus label-icon"></i> Tambah Baris
+                                class="btn btn-success btn-rounded waves-effect waves-light mb-2">
+                                <i class="bx bx-plus label-icon"></i>Baris
                             </button>
 
-                            <button type="submit" class="btn btn-primary btn-label waves-effect waves-light">
+                            <button type="button" wire:click="save"
+                                class="btn btn-success btn-rounded waves-effect waves-light mb-2">
                                 <i class="bx bx-save label-icon"></i>
                                 <span wire:loading.remove wire:target="save">Simpan</span>
                                 <span wire:loading wire:target="save">Sedang Menyimpan...</span>
