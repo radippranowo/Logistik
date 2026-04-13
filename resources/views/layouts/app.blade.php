@@ -249,7 +249,9 @@
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a wire:navigate href="{{ route('barang.index') }}" key="t-tui-calendar">Barang</a></li>
-                                <li><a wire:navigate href="{{ route('category.index') }}"  key="t-full-calendar">Jenis Barang</a>
+                                <li><a wire:navigate href="{{ route('category.index') }}"  key="t-full-calendar">Kategori</a>
+                                    <li><a wire:navigate href="{{ route('merk.index') }}"  key="t-full-calendar">Merk</a>
+                                        <li><a wire:navigate href="{{ route('group.index') }}"  key="t-full-calendar">Group</a>
                                 </li>
                             </ul>
                         </li>
@@ -283,7 +285,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                Design & Develop by Themesbrand
+                                Design & Develop by KTU
                             </div>
                         </div>
                     </div>

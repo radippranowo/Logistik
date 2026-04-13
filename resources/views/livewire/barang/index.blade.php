@@ -55,8 +55,11 @@
                                 <tr>
                                     <th class="align-middle" style="width: 50px;">No</th>
                                     <th class="align-middle">Kode</th>
+                                    <th class="align-middle">Part Number</th>
                                     <th class="align-middle">Nama</th>
                                     <th class="align-middle">Categori</th>
+                                    <th class="align-middle">Merk</th>
+                                    <th class="align-middle">Group</th>
                                     <th class="align-middle">Stok</th>
                                     <th class="align-middle">Harga</th>
                                     <th class="align-middle">Deskripsi</th>
@@ -70,8 +73,11 @@
                                         <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                         </td>
                                         <td>{{ $item->kode_barang }}</td>
+                                        <td>{{ $item->part_number }}</td>
                                         <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->kategori->nama_category }}</td>
+                                        <td>{{ $item->merk->nama_merk }}</td>
+                                        <td>{{ $item->group->nama_group }}</td>
                                         <td><span class="badge badge-pill badge-soft-info font-size-12">
                                                 {{ $item->stok ?? 'N/A' }}
                                             </span>
@@ -161,6 +167,49 @@
                                         </div>
                                     @enderror
                                 </div>
+                                 </div>
+                                  <div class="col-12 mb-3">
+                                    <label class="form-label">Group</label>
+
+                                    <div wire:ignore>
+                                        <select id="select2-group" wire:model="merk_code"
+                                            class="form-control select @error('merk_code') is-invalid @enderror">
+
+                                            <option value="">Pilih</option>
+                                            @foreach ($merks as $cat)
+                                                <option value="{{ $cat->kode_merk }}">{{ $cat->nama_merk }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    @error('merk_code')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                  <div class="col-12 mb-3">
+                                    <label class="form-label">Group</label>
+
+                                    <div wire:ignore>
+                                        <select id="select2-group" wire:model="group_code"
+                                            class="form-control select @error('group_code') is-invalid @enderror">
+
+                                            <option value="">Pilih</option>
+                                            @foreach ($groups as $cat)
+                                                <option value="{{ $cat->kode_group }}">{{ $cat->nama_group }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    @error('group_code')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                                 <div class="col-6 mb-3">
                                     <label>Stok</label>
                                     <input type="number" wire:model="stok" class="form-control">
@@ -184,21 +233,47 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('livewire:navigated', () => { // Gunakan ini jika pakai Livewire 3
             initSelect2();
         });
 
         function initSelect2() {
-            $('#select2-kategori').select2({
+            $('#select2-category').select2({
                 dropdownParent: $('.modal'), // Agar dropdown muncul di atas modal
                 width: '100%' // Agar lebar select penuh
             });
 
             // Sinkronisasi Select2 dengan Livewire
-            $('#select2-kategori').on('change', function(e) {
-                var data = $('#select2-kategori').select2("val");
+            $('#select2-category').on('change', function(e) {
+                var data = $('#select2-category').select2("val");
                 @this.set('category_code', data);
+            });
+        }
+
+        // Inisialisasi ulang saat modal dibuka via Alpine
+        window.addEventListener('open-tambah-modal', () => {
+            setTimeout(() => {
+                initSelect2();
+            }, 100);
+        });
+    </script>
+    <script>
+        document.addEventListener('livewire:navigated', () => { // Gunakan ini jika pakai Livewire 3
+            initSelect2();
+        });
+
+        function initSelect2() {
+            $('#select2-group').select2({
+                dropdownParent: $('.modal'), // Agar dropdown muncul di atas modal
+                width: '100%' // Agar lebar select penuh
+            });
+
+            // Sinkronisasi Select2 dengan Livewire
+            $('#select2-group').on('change', function(e) {
+                var data = $('#select2-group').select2("val");
+                @this.set('group_code', data);
             });
         }
 

@@ -17,12 +17,15 @@
                             <table class="table table-bordered table-nowrap align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width: 15%;">Kode<span class="text-danger"></span></th>
-                                        <th style="width: 20%;">Nama<span class="text-danger"></span></th>
+                                        <th style="width: 10%;">Kode<span class="text-danger"></span></th>
+                                        <th style="width: 15%;">Part Number<span class="text-danger"></span></th>
+                                        <th style="width: 15%;">Nama<span class="text-danger"></span></th>
                                         <th style="width: 15%;">Kategori <span class="text-danger"></span></th>
-                                        <th style="width: 10%;">Stok</th>
-                                        <th style="width: 15%;">Harga</th>
-                                        <th style="width: 20%;">Deskripsi</th>
+                                        <th style="width: 15%;">Merk <span class="text-danger"></span></th>
+                                        <th style="width: 15%;">Group <span class="text-danger"></span></th>
+                                        <th style="width: 8%;">Stok</th>
+                                        {{-- <th style="width: 15%;">Harga</th> --}}
+                                        {{-- <th style="width: 20%;">Deskripsi</th> --}}
                                         <th style="width: 5%;" class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -37,6 +40,15 @@
                                                     <div class="invalid-feedback font-size-11">{{ $message }}</div>
                                                 @enderror
                                             </td>
+                                            <td>
+                                                <input type="text"
+                                                    wire:model="inputs.{{ $index }}.part_number"
+                                                    class="form-control form-control-sm @error('inputs.' . $index . '.part_number') is-invalid @enderror">
+                                                @error('inputs.' . $index . '.part_number')
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                @enderror
+                                            </td>
+
                                             <td>
                                                 <input type="text"
                                                     wire:model="inputs.{{ $index }}.nama_barang"
@@ -60,21 +72,49 @@
 
                                             </td>
                                             <td>
+                                                <select wire:model="inputs.{{ $index }}.merk_code"
+                                                    class="form-select form-select-sm @error('inputs.' . $index . '.merk_code') is-invalid @enderror">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($merks as $cat)
+                                                        <option value="{{ $cat->kode_merk }}">
+                                                            {{ $cat->nama_merk }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('inputs.' . $index . '.merk_code')
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                @enderror
+
+                                            </td>
+                                            <td>
+                                                <select wire:model="inputs.{{ $index }}.group_code"
+                                                    class="form-select form-select-sm @error('inputs.' . $index . '.group_code') is-invalid @enderror">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($groups as $cat)
+                                                        <option value="{{ $cat->kode_group }}">
+                                                            {{ $cat->nama_group }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('inputs.' . $index . '.group_code')
+                                                    <div class="invalid-feedback font-size-11">{{ $message }}</div>
+                                                @enderror
+
+                                            </td>
+
+                                            <td>
                                                 <input type="number" wire:model="inputs.{{ $index }}.stok"
                                                     class="form-control form-control-sm text-center">
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <div class="input-group input-group-sm">
                                                     <span class="input-group-text">Rp</span>
                                                     <input type="number"
                                                         wire:model="inputs.{{ $index }}.harga"class="form-control form-control-sm text-center">
-
                                                 </div>
-                                            </td>
-                                            <td>
+                                            </td> --}}
+                                            {{-- <td>
                                                 <input type="text" wire:model="inputs.{{ $index }}.deskripsi"
                                                     class="form-control form-control-sm" placeholder="...">
-                                            </td>
+                                            </td> --}}
                                             <td class="text-center">
                                                 @if (count($inputs) > 1)
                                                     <button data-repeater-delete type="button"
