@@ -19,7 +19,9 @@ class Create extends Component
 
     public function addInput()
     {
+        // Gunakan key unik 'id' agar Livewire tidak bingung saat re-render
         $this->inputs[] = [
+            'id' => uniqid(), 
             'kode_barang' => '',
             'part_number' => '',
             'nama_barang' => '',
@@ -34,13 +36,15 @@ class Create extends Component
 
     public function removeInput($index)
     {
-        unset($this->inputs[$index]);
-        $this->inputs = array_values($this->inputs);
+       // Langsung hapus dari array berdasarkan index
+    unset($this->inputs[$index]);
+    
+    // Reset index array agar tetap berurutan (0, 1, 2...)
+    $this->inputs = array_values($this->inputs);
     }
 
     public function save()
     {
-        // Validasi untuk semua input di dalam array
         $this->validate([
             'inputs.*.kode_barang' => 'required|unique:barangs,kode_barang',
             'inputs.*.part_number' => 'unique:barangs,part_number',
@@ -49,36 +53,35 @@ class Create extends Component
             'inputs.*.merk_code' => 'required',
             'inputs.*.group_code' => 'required',
             'inputs.*.stok' => 'required|numeric',
-            'inputs.*.harga' => 'required|numeric',
         ], [
-            'inputs.*.kode_barang.required' => 'Kode wajib diisi',
-            'inputs.*.kode_barang.unique' => 'Kode sudah tersedia',
-            'inputs.*.part_number.unique' => 'Part number sudah tersedia',
-            'inputs.*.nama_barang.required' => 'Nama wajib diisi',
-            'inputs.*.category_code' => 'Categori wajib diisi',
-            'inputs.*.merk_code' => 'Merk wajib diisi',
-            'inputs.*.group_code' => 'Group wajib diisi',
-            
-            
-           
+            'inputs.*.kode_barang.required' => 'Wajib diisi',
+            'inputs.*.kode_barang.unique' => 'Sudah ada',
+            'inputs.*.part_number.unique' => 'Sudah ada',
+            'inputs.*.nama_barang.required' => 'Wajib diisi',
+            'inputs.*.category_code.required' => 'Wajib diisi',
+            'inputs.*.merk_code.required' => 'Wajib diisi',
+            'inputs.*.group_code.required' => 'Wajib diisi',
+            // ... pesan lainnya
         ]);
 
         foreach ($this->inputs as $item) {
-            Barang::create($item);
-            session()->flash('success', 'Data Berhasil Disimpan');
+            // Hapus 'id' sementara sebelum insert ke database jika 'id' bukan kolom tabel
+            $data = $item;
+            unset($data['id']); 
+            
+            Barang::create($data);
         }
 
-       return $this->redirectRoute('barang.index', navigate: true);
-      
+        session()->flash('success', 'Data Berhasil Disimpan');
+        return $this->redirectRoute('barang.index', navigate: true);
     }
 
     public function render()
     {
         return view('livewire.barang.create', [
             'categories' => Category::all(),
-             'merks' => Merk::all(),
+            'merks' => Merk::all(),
             'groups' => Group::all()
-           
         ]);
     }
 }

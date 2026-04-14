@@ -13,7 +13,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-sm-8">
@@ -85,16 +84,16 @@
                                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                         <td> {{ $item->deskripsi }}</td>
                                         <td>
-                                            <div class="d-flex gap-3">
-                                                <a href="javascript:void(0);" wire:click="edit({{ $item->id }})"
+                                            
+                                                <a class="btn btn-sm btn-soft-info" wire:click="edit({{ $item->id }})"
                                                     class="text-success">
-                                                    <i class="mdi mdi-pencil font-size-18"></i>
+                                                    <i class="mdi mdi-pencil-outline "></i>
                                                 </a>
-                                                <a href="javascript:void(0);" class="text-danger"
+                                                <a class="btn btn-sm btn-soft-danger"
                                                     wire:click="$dispatch('confirm-delete', { id: {{ $item->id }}, nama: '{{ $item->nama_barang }}' })">
-                                                    <i class="mdi mdi-delete font-size-18"></i>
+                                                    <i   class="mdi mdi-delete-outline"></i>
                                                 </a>
-                                            </div>
+                                           
                                         </td>
                                     </tr>
                                 @endforeach

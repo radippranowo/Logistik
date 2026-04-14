@@ -47,11 +47,21 @@ class Index extends Component
         $this->isEdit = true;
     }
 
-    public function delete($id)
-    {
-        Category::find($id)->delete();
+ public function delete($id)
+{
+    $category = Category::findOrFail($id);
+
+    if ($category->barangs()->exists()) {
+        $this->dispatch('swal:error', [
+            'title' => 'Gagal Hapus!',
+            'text'  => "Kategori '{$category->nama_category}' tidak bisa dihapus karena masih digunakan oleh data barang."
+        ]);
+        return;
     }
 
+    $category->delete();
+     $this->dispatch('swal:success', message: 'Categori berhasil dihapus!');
+}
     public function resetInput()
     {
         $this->reset(['category_id', 'kode_category', 'nama_category', 'isEdit']);

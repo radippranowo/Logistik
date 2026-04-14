@@ -73,11 +73,10 @@
                                                    onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
                                                     <i class="mdi mdi-pencil font-size-18"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" wire:click="delete({{ $item->id }})" 
-                                                   onclick="confirm('Yakin ingin menghapus?') || event.stopImmediatePropagation()" 
-                                                   class="text-danger">
-                                                    <i class="mdi mdi-delete font-size-18"></i>
-                                                </a>
+                                                 <a class="btn btn-sm btn-soft-danger"
+    wire:click="$dispatch('confirm-delete-category', { id: {{ $item->id }}, nama: '{{ $item->nama_category }}' })">
+    <i class="mdi mdi-delete-outline"></i>
+</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -106,6 +105,7 @@
                         <h5 class="modal-title">{{ $isEdit ? 'Edit Category' : 'Add New Category' }}</h5>
                         <button type="button" class="btn-close" @click="open = false"></button>
                     </div>
+               
                     <form wire:submit.prevent="store">
                         <div class="modal-body">
                             <div class="row">
@@ -130,4 +130,46 @@
             </div>
         </div>
     </div>
+    <script>
+        // Listener Konfirmasi Hapus
+        window.addEventListener('confirm-delete-category', event => {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Kategori " + event.detail.nama + " akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#34c38f', // warna sukses bootstrap
+                cancelButtonColor: '#f46a6a', // warna danger bootstrap
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Memanggil fungsi delete di Class Livewire
+                    @this.call('delete', event.detail.id);
+                }
+            });
+        });
+
+        // Listener Sukses (Bisa digunakan untuk Save/Edit/Delete)
+        window.addEventListener('swal:success', event => {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: event.detail.message,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+    </script>
+    <script>
+        // Tambahkan ini di bawah listener swal:success Anda
+window.addEventListener('swal:error', event => {
+    Swal.fire({
+        title: event.detail[0].title, // Mengambil data title dari array detail
+        text: event.detail[0].text,   // Mengambil data pesan error
+        icon: 'error',
+        confirmButtonColor: '#556ee6'
+    });
+});
+    </script>
 </div>

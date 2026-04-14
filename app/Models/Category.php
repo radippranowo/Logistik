@@ -11,6 +11,10 @@ class Category extends Model
     protected $fillable = ['kode_category', 'nama_category'];
     public function barangs() {
         
-        return $this->hasMany(Barang::class);
+        // return $this->hasMany(Barang::class);
+        return $this->hasMany(Barang::class, 'category_code', 'kode_category');
+        
     }
+    
+    
 }

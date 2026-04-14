@@ -410,7 +410,20 @@
     <script src="{{ asset('assets/libs/jquery.repeater/jquery.repeater.min.js')}}"></script>
     <script src="{{ asset('assets/js/pages/form-repeater.int.js')}}"></script>
     
+    {{-- <script src="{{ asset('assets/libs/table-edits/build/table-edits.min.js')}}"></script>
+    <script src="{{ asset('assets/js/pages/table-editable.int.js')}}"></script>  --}}
 
+    {{-- <script>
+    // Matikan klik kanan
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Matikan shortcut tombol F12 atau Ctrl+Shift+I
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) {
+            return false;
+        }
+    }
+</script> --}}
 </body>
 
 <!-- Mirrored from themesbrand.com/skote/layouts/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Nov 2022 07:57:53 GMT -->
