@@ -76,7 +76,7 @@ class Index extends Component
 
 public function edit($id)
 {
-    $this->resetValidation();
+  
     $barang = Barang::findOrFail($id);
     
     // Mapping data ke properti
@@ -91,8 +91,8 @@ public function edit($id)
     $this->harga         = $barang->harga;
     $this->deskripsi     = $barang->deskripsi;
     
-    // Perintah untuk membuka modal secara native
-    $this->dispatch('open-edit-modal'); 
+    // // Perintah untuk membuka modal secara native
+    // $this->dispatch('open-edit-modal'); 
 }
 
 public function update()

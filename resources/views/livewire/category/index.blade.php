@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Kategori</h4>
+                <h4 class="mb-sm-0 font-size-18">KATEGORI</h4>
             </div>
         </div>
     </div>
@@ -63,20 +63,21 @@
                             <tbody>
                                 @foreach ($categories as $index => $item)
                                     <tr>
-                                        
+
                                         <td>{{ $categories->firstItem() + $index }}</td>
                                         <td>{{ $item->kode_category }}</td>
                                         <td>{{ $item->nama_category }}</td>
                                         <td>
                                             <div class="d-flex gap-3">
-                                                <a href="javascript:void(0);" wire:click="edit({{ $item->id }})" class="text-success" 
-                                                   onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
+                                                <a href="javascript:void(0);" wire:click="edit({{ $item->id }})"
+                                                    class="text-success"
+                                                    onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
                                                     <i class="mdi mdi-pencil font-size-18"></i>
                                                 </a>
-                                                 <a class="btn btn-sm btn-soft-danger"
-    wire:click="$dispatch('confirm-delete-category', { id: {{ $item->id }}, nama: '{{ $item->nama_category }}' })">
-    <i class="mdi mdi-delete-outline"></i>
-</a>
+                                                <a class="btn btn-sm btn-soft-danger"
+                                                    wire:click="$dispatch('confirm-delete-category', { id: {{ $item->id }}, nama: '{{ $item->nama_category }}' })">
+                                                    <i class="mdi mdi-delete-outline"></i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -84,7 +85,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="mt-3">
                         {{ $categories->links() }}
                     </div>
@@ -105,19 +106,23 @@
                         <h5 class="modal-title">{{ $isEdit ? 'Edit Category' : 'Add New Category' }}</h5>
                         <button type="button" class="btn-close" @click="open = false"></button>
                     </div>
-               
+
                     <form wire:submit.prevent="store">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label>Kode Kategori</label>
                                     <input type="text" wire:model="kode_category" class="form-control">
-                                    @error('kode_category') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    @error('kode_category')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label>Nama Kategori</label>
                                     <input type="text" wire:model="nama_category" class="form-control">
-                                    @error('nama_category') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    @error('nama_category')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -163,13 +168,13 @@
     </script>
     <script>
         // Tambahkan ini di bawah listener swal:success Anda
-window.addEventListener('swal:error', event => {
-    Swal.fire({
-        title: event.detail[0].title, // Mengambil data title dari array detail
-        text: event.detail[0].text,   // Mengambil data pesan error
-        icon: 'error',
-        confirmButtonColor: '#556ee6'
-    });
-});
+        window.addEventListener('swal:error', event => {
+            Swal.fire({
+                title: event.detail[0].title, // Mengambil data title dari array detail
+                text: event.detail[0].text, // Mengambil data pesan error
+                icon: 'error',
+                confirmButtonColor: '#556ee6'
+            });
+        });
     </script>
 </div>

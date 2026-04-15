@@ -19,6 +19,7 @@ class Create extends Component
 
     public function addInput()
     {
+    
         // Gunakan key unik 'id' agar Livewire tidak bingung saat re-render
         $this->inputs[] = [
             'id' => uniqid(), 
@@ -34,14 +35,38 @@ class Create extends Component
         ];
     }
 
-    public function removeInput($index)
-    {
-       // Langsung hapus dari array berdasarkan index
-    unset($this->inputs[$index]);
-    
-    // Reset index array agar tetap berurutan (0, 1, 2...)
-    $this->inputs = array_values($this->inputs);
+   public function removeInput($id)
+{
+    // Cari index berdasarkan ID unik, bukan urutan baris
+    $index = array_search($id, array_column($this->inputs, 'id'));
+
+    if ($index !== false) {
+        unset($this->inputs[$index]);
+        // Re-index tetap perlu agar looping @foreach tidak error
+        $this->inputs = array_values($this->inputs);
     }
+}
+public function updated($propertyName)
+{
+    // Ini akan menjalankan validasi hanya pada field yang sedang diubah saja
+    $this->validateOnly($propertyName, [
+        'inputs.*.kode_barang' => 'required|unique:barangs,kode_barang',
+        'inputs.*.part_number' => 'unique:barangs,part_number',
+        'inputs.*.nama_barang' => 'required|min:3',
+        'inputs.*.category_code' => 'required',
+        'inputs.*.merk_code' => 'required',
+        'inputs.*.group_code' => 'required',
+        'inputs.*.stok' => 'required|numeric',
+    ], [
+        'inputs.*.kode_barang.required' => 'Wajib diisi',
+        'inputs.*.kode_barang.unique' => 'Kode Sudah ada',
+        'inputs.*.part_number.unique' => 'Sudah ada',
+        'inputs.*.nama_barang.required' => 'Wajib diisi',
+        'inputs.*.category_code.required' => 'Wajib diisi',
+        'inputs.*.merk_code.required' => 'Wajib diisi',
+        'inputs.*.group_code.required' => 'Wajib diisi',
+    ]);
+}
 
     public function save()
     {

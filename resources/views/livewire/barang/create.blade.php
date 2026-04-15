@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-body border-bottom">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 card-title flex-grow-1">Data Barang</h5>
+                        <h5 class="mb-0 card-title flex-grow-1">BARANG</h5>
                         <div class="flex-shrink-0">
                             <button wire:navigate href="{{ route('barang.index') }}" type="button"
                                 class="btn btn-primary btn-rounded waves-effect waves-light mb-2">
@@ -32,13 +32,13 @@
                                     </tr>
                                 </thead>
                                 <tbody data-repeater-list="group-a">
-                                    
+
                                     @foreach ($inputs as $index => $item)
                                         {{-- SANGAT PENTING: Gunakan ID unik dari array, jangan pakai $index --}}
                                         <tr wire:key="row-{{ $item['id'] }}">
                                             <td>
                                                 <input type="text"
-                                                    wire:model.blur="inputs.{{ $index }}.kode_barang"
+                                                    wire:model.live="inputs.{{ $index }}.kode_barang"
                                                     class="form-control form-control-sm @error('inputs.' . $index . '.kode_barang') is-invalid @enderror">
                                                 @error('inputs.' . $index . '.kode_barang')
                                                     <div class="invalid-feedback-absolute">{{ $message }}</div>
@@ -106,21 +106,18 @@
                                             <td class="text-center">
                                                 @if (count($inputs) > 1)
                                                     <button type="button"
-                                                        wire:click="removeInput({{ $index }})"
+                                                        wire:click="removeInput('{{ $item['id'] }}')"
                                                         wire:loading.attr="disabled"
-                                                        wire:target="removeInput({{ $index }})"
+                                                        wire:target="removeInput('{{ $item['id'] }}')"
                                                         class="btn btn-soft-danger btn-sm border-0 shadow-sm">
 
-                                                        {{-- Ikon tong sampah (sembunyi saat hapus) --}}
                                                         <i wire:loading.remove
-                                                            wire:target="removeInput({{ $index }})"
+                                                            wire:target="removeInput('{{ $item['id'] }}')"
                                                             class="bx bx-trash font-size-16"></i>
 
-                                                        {{-- Spinner kecil (muncul saat hapus) --}}
                                                         <span wire:loading
-                                                            wire:target="removeInput({{ $index }})"
-                                                            class="spinner-border spinner-border-sm" role="status"
-                                                            aria-hidden="true">
+                                                            wire:target="removeInput('{{ $item['id'] }}')"
+                                                            class="spinner-border spinner-border-sm" role="status">
                                                         </span>
                                                     </button>
                                                 @endif

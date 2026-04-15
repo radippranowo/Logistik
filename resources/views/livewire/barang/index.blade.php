@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body border-bottom">
+                <div class="card-body border">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 card-title flex-grow-1">Data Barang</h5>
+                        <h5 class="mb-0 card-title flex-grow-1">BARANG</h5>
                         <div class="flex-shrink-0">
                             <button wire:navigate href="{{ route('barang.create') }}" type="button"
                                 class="btn btn-success btn-rounded waves-effect waves-light mb-2">
@@ -26,6 +26,7 @@
                                     </div>
 
                                 </div>
+                                
                                 <div class="dropdown custom-no-anim">
                                     <button class="btn btn-light btn-rounded shadow-sm border dropdown-toggle"
                                         type="button" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -84,16 +85,14 @@
                                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                         <td> {{ $item->deskripsi }}</td>
                                         <td>
-                                            
                                                 <a class="btn btn-sm btn-soft-info" wire:click="edit({{ $item->id }})"
-                                                    class="text-success">
+                                                    class="text-success" onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
                                                     <i class="mdi mdi-pencil-outline "></i>
                                                 </a>
                                                 <a class="btn btn-sm btn-soft-danger"
                                                     wire:click="$dispatch('confirm-delete', { id: {{ $item->id }}, nama: '{{ $item->nama_barang }}' })">
-                                                    <i   class="mdi mdi-delete-outline"></i>
+                                                    <i class="mdi mdi-delete-outline"></i>
                                                 </a>
-                                           
                                         </td>
                                     </tr>
                                 @endforeach
@@ -105,24 +104,23 @@
         </div>
     </div>
 
-    <div wire:ignore.self class="modal fade orderdetailsModal" id="modalEditBarang" tabindex="-1" role="dialog"
-        aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-m" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orderdetailsModalLabel">Edit Data Barang</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+    <div x-data="{ open: false }" x-init="window.addEventListener('open-tambah-modal', () => { open = true });
+    window.addEventListener('close-modal', () => { open = false });" x-cloak wire:ignore>
 
-                <form wire:submit.prevent="update">
-                    <div class="modal-body">
-                        <div wire:loading wire:target="edit" class="text-center p-5 w-100">
-                            <div class="spinner-border text-primary" role="status"></div>
-                            <p class="mt-2 text-muted">Sinkronisasi data...</p>
-                        </div>
+        <div class="modal fade" :class="open ? 'show d-block' : 'd-none'" x-show="open" @click.self="open = false"
+            @keydown.escape.window="open = false" style="background-color: rgba(0,0,0,0.5); z-index: 1060;">
 
-                        <div class="row" wire:loading.remove wire:target="edit">
-                            <div class="col-md-4 mb-3">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $isEdit ? 'Edit Barang' : 'Barang' }}</h5>
+                        <button type="button" class="btn-close" @click="open = false"></button>
+                    </div>
+
+                    <form wire:submit.prevent="store">
+                        <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-4 mb-3">
                                 <label class="form-label">Kode Barang</label>
                                 <input type="text" wire:model="kode_barang"
                                     class="form-control @error('kode_barang') is-invalid @enderror">
@@ -180,31 +178,19 @@
                                 <label class="form-label">Deskripsi</label>
                                 <textarea wire:model="deskripsi" class="form-control" rows="3"></textarea>
                             </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary px-4" wire:loading.attr="disabled">Update
-                            Data</button>
-                    </div>
-                </form>
+                            
+                     
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="open = false">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('livewire:init', () => {
-            // Inisialisasi modal menggunakan class bawaan Anda
-            const editModal = new bootstrap.Modal(document.querySelector('.orderdetailsModal'));
-
-            Livewire.on('open-edit-modal', () => {
-                editModal.show();
-            });
-
-            Livewire.on('close-modal', () => {
-                editModal.hide();
-            });
-        });
-    </script>
     {{-- <script>
     document.addEventListener('livewire:navigated', () => { // Gunakan ini jika pakai Livewire 3
         initSelect2();

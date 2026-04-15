@@ -8,6 +8,10 @@ use App\Livewire\Merk\Index as MerkIndex;
 use App\Livewire\Group\Index as GroupIndex;
 use App\Models\Group;
 
+
+use App\Http\Controllers\BarangController; // Pastikan ini di-import di atas
+use App\Http\Controllers\CategoryController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,3 +24,20 @@ Route::prefix('barang')->name('barang.')->group(function () {
 Route::get('/category', CategoryIndex::class)->name('category.index');
 Route::get('/merk', MerkIndex::class)->name('merk.index');
 Route::get('/group', GroupIndex::class)->name('group.index');
+
+
+Route::prefix('v2')->group(function () {
+    // URL-nya akan menjadi: localhost:8000/v2/barang
+    Route::get('/barang', [BarangController::class, 'index'])->name('barang.react.index');
+    
+    // URL untuk simpan data: localhost:8000/v2/barang (Metode POST)
+    Route::post('/barang', [BarangController::class, 'store'])->name('barang.react.store');
+});
+
+Route::prefix('v2')->group(function () {
+    // URL-nya akan menjadi: localhost:8000/v2/barang
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.react.index');
+    
+    // URL untuk simpan data: localhost:8000/v2/barang (Metode POST)
+    Route::post('/category', [CategoryController::class, 'store'])->name('category.react.store');
+});

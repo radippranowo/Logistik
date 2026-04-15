@@ -65,6 +65,7 @@ class Index extends Component
     public function resetInput()
     {
         $this->reset(['category_id', 'kode_category', 'nama_category', 'isEdit']);
+        
     }
 
     public function render()
