@@ -361,40 +361,6 @@
 
     
 
-    <script data-navigate-once>
-        document.addEventListener('livewire:navigated', () => {
-
-            // 1. Ambil elemen menu
-            const $sideMenu = $("#side-menu");
-
-            if ($sideMenu.length > 0 && $.fn.metisMenu) {
-                // 2. HANCURKAN instance lama secara total untuk cegah bayangan
-                // Ini akan menghapus class mm-active, mm-show, dll yang bikin double teks
-                $sideMenu.metisMenu('dispose');
-
-                // 3. Bersihkan manual class sisa jika MetisMenu gagal membersihkan
-                $sideMenu.find('.mm-active').removeClass('mm-active');
-                $sideMenu.find('.mm-show').removeClass('mm-show');
-                $sideMenu.find('ul').attr('aria-expanded', 'false');
-
-                // 4. NYALAKAN ULANG
-                $sideMenu.metisMenu();
-            }
-
-            // 5. Tandai link aktif berdasarkan URL sekarang
-            let currentUrl = window.location.href.split(/[?#]/)[0];
-            $('#side-menu a').each(function() {
-                if (this.href === currentUrl) {
-                    $(this).addClass('active');
-                    $(this).parent().addClass('mm-active'); // li
-                    $(this).parent().parent().addClass('mm-show'); // ul
-                    $(this).parent().parent().prev().addClass('mm-active'); // induk a
-                    $(this).parent().parent().parent().addClass('mm-active'); // induk li
-                }
-            });
-        });
-    </script>
-
    
 
     <!-- JAVASCRIPT -->
@@ -409,21 +375,8 @@
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/libs/jquery.repeater/jquery.repeater.min.js')}}"></script>
     <script src="{{ asset('assets/js/pages/form-repeater.int.js')}}"></script>
-    
-    {{-- <script src="{{ asset('assets/libs/table-edits/build/table-edits.min.js')}}"></script>
-    <script src="{{ asset('assets/js/pages/table-editable.int.js')}}"></script>  --}}
-
-    {{-- <script>
-    // Matikan klik kanan
-    document.addEventListener('contextmenu', event => event.preventDefault());
-
-    // Matikan shortcut tombol F12 atau Ctrl+Shift+I
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) {
-            return false;
-        }
-    }
-</script> --}}
+  
+  
 </body>
 
 <!-- Mirrored from themesbrand.com/skote/layouts/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Nov 2022 07:57:53 GMT -->
