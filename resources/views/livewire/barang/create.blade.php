@@ -1,178 +1,218 @@
 <div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-0 card-title flex-grow-1">BARANG</h5>
-                        <div class="flex-shrink-0">
-                            <button wire:navigate href="{{ route('barang.index') }}" type="button"
-                                class="btn btn-primary btn-rounded waves-effect waves-light mb-2">
-                                <i class="mdi mdi-arrow-left me-1"></i>Kembali
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form class="repeater" wire:submit.prevent="save">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-nowrap align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 10%;">Kode<span class="text-danger"></span></th>
+    <div x-data="{
+        inputs: @entangle('inputs').live,
+    
+        add() {
+            this.inputs.push({
+                id: 'new-' + Date.now(),
+                kode_barang: '',
+                part_number: '',
+                nama_barang: '',
+                category_code: '',
+                merk_code: '',
+                group_code: '',
+                stok: 0,
+                harga: 0,
+            });
+        },
+    
+        remove(index) {
+            if (this.inputs.length > 1) {
+                this.inputs.splice(index, 1);
+            }
+        }
+    }">
+
+        <div class="card shadow-sm">
+            <div class="card-body border-bottom d-flex justify-content-between">
+                <h5 class="mb-0">BARANG</h5>
+
+                <a href="{{ route('barang.index') }}" wire:navigate
+                    class="btn btn-primary btn-rounded waves-effect waves-light mb-2">
+                    <i class="mdi mdi-arrow-left me-1"></i>Kembali
+
+                </a>
+            </div>
+
+            <div class="card-body">
+                <form wire:submit.prevent="save">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                      <th style="width: 10%;">Kode<span class="text-danger"></span></th>
                                         <th style="width: 15%;">Part Number<span class="text-danger"></span></th>
                                         <th style="width: 15%;">Nama<span class="text-danger"></span></th>
                                         <th style="width: 15%;">Kategori <span class="text-danger"></span></th>
                                         <th style="width: 15%;">Merk <span class="text-danger"></span></th>
                                         <th style="width: 15%;">Group <span class="text-danger"></span></th>
                                         <th style="width: 8%;">Stok</th>
-                                        {{-- <th style="width: 15%;">Harga</th> --}}
-                                        {{-- <th style="width: 20%;">Deskripsi</th> --}}
+                                        <th style="width: 15%;">Harga</th>
+                                        {{-- <th style="width: 20%;">Deskripsi</th>  --}}
                                         <th style="width: 5%;" class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <template x-for="(item, index) in inputs" :key="item.id">
+                                    <tr>
+                                        <!-- KODE -->
+                                        <td class="position-relative">
+                                            <input type="text" :id="'kode_barang_' + item.id"
+                                                x-model="item.kode_barang" class="form-control form-control-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.kode_barang`) }">
+
+                                            <template x-if="$wire.errors.has(`inputs.${index}.kode_barang`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.kode_barang`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- PART -->
+                                        <td class="position-relative">
+                                            <input type="text" :id="'part_number_' + item.id"
+                                                x-model="item.part_number" class="form-control form-control-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.part_number`) }">
+
+                                            <template x-if="$wire.errors.has(`inputs.${index}.part_number`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.part_number`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- NAMA -->
+                                        <td class="position-relative">
+                                            <input type="text" :id="'nama_barang_' + item.id"
+                                                x-model="item.nama_barang" class="form-control form-control-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.nama_barang`) }">
+
+                                            <template x-if="$wire.errors.has(`inputs.${index}.nama_barang`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.nama_barang`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- CATEGORY -->
+                                        <td class="position-relative">
+                                            <select :id="'category_' + item.id" x-model="item.category_code"
+                                                class="form-select form-select-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.category_code`) }">
+
+                                                <option value="">Pilih</option>
+                                                @foreach ($categories as $cat)
+                                                    <option value="{{ $cat->kode_category }}">
+                                                        {{ $cat->nama_category }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <template x-if="$wire.errors.has(`inputs.${index}.category_code`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.category_code`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- MERK -->
+                                        <td class="position-relative">
+                                            <select :id="'merk_' + item.id" x-model="item.merk_code"
+                                                class="form-select form-select-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.merk_code`) }">
+
+                                                <option value="">Pilih</option>
+                                                @foreach ($merks as $merk)
+                                                    <option value="{{ $merk->kode_merk }}">
+                                                        {{ $merk->nama_merk }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <template x-if="$wire.errors.has(`inputs.${index}.merk_code`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.merk_code`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- GROUP -->
+                                        <td class="position-relative">
+                                            <select :id="'group_' + item.id" x-model="item.group_code"
+                                                class="form-select form-select-sm"
+                                                :class="{ 'is-invalid': $wire.errors.has(`inputs.${index}.group_code`) }">
+
+                                                <option value="">Pilih</option>
+                                                @foreach ($groups as $group)
+                                                    <option value="{{ $group->kode_group }}">
+                                                        {{ $group->nama_group }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <template x-if="$wire.errors.has(`inputs.${index}.group_code`)">
+                                                <div class="invalid-feedback-absolute"
+                                                    x-text="$wire.errors.get(`inputs.${index}.group_code`)[0]">
+                                                </div>
+                                            </template>
+                                        </td>
+
+                                        <!-- STOK -->
+                                       <td class="position-relative">
+                                            <input type="number" :id="'stok_' + item.id" x-model.number="item.stok"
+                                                class="form-control form-control-sm text-center">
+                                        </td>
+
+                                        <!-- HARGA -->
+                                        <td class="position-relative">
+                                            <input type="number" :id="'harga_' + item.id" x-model.number="item.harga"
+                                                class="form-control form-control-sm text-center">
+                                        </td>
+
+                                        <!-- AKSI -->
+                                        <td class="text-center">
+                                            <button type="button" @click="remove(index)" x-show="inputs.length > 1"
+                                                class="btn btn-soft-danger btn-sm border-0 shadow-sm bx bx-trash font-size-16">
+
+                                            </button>
+                                        </td>
+
                                     </tr>
-                                </thead>
-                                <tbody data-repeater-list="group-a">
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
 
-                                    @foreach ($inputs as $index => $item)
-                                        {{-- SANGAT PENTING: Gunakan ID unik dari array, jangan pakai $index --}}
-                                        <tr wire:key="row-{{ $item['id'] }}">
-                                            <td>
-                                                <input type="text"
-                                                    wire:model.live="inputs.{{ $index }}.kode_barang"
-                                                    class="form-control form-control-sm @error('inputs.' . $index . '.kode_barang') is-invalid @enderror">
-                                                @error('inputs.' . $index . '.kode_barang')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text"
-                                                    wire:model.blur="inputs.{{ $index }}.part_number"
-                                                    class="form-control form-control-sm @error('inputs.' . $index . '.part_number') is-invalid @enderror">
-                                                @error('inputs.' . $index . '.part_number')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text"
-                                                    wire:model.blur="inputs.{{ $index }}.nama_barang"
-                                                    class="form-control form-control-sm @error('inputs.' . $index . '.nama_barang') is-invalid @enderror">
-                                                @error('inputs.' . $index . '.nama_barang')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <select wire:model.change="inputs.{{ $index }}.category_code"
-                                                    class="form-select form-select-sm @error('inputs.' . $index . '.category_code') is-invalid @enderror">
-                                                    <option value="">Pilih</option>
-                                                    @foreach ($categories as $cat)
-                                                        <option value="{{ $cat->kode_category }}">
-                                                            {{ $cat->nama_category }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('inputs.' . $index . '.category_code')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <select wire:model.change="inputs.{{ $index }}.merk_code"
-                                                    class="form-select form-select-sm @error('inputs.' . $index . '.merk_code') is-invalid @enderror">
-                                                    <option value="">Pilih</option>
-                                                    @foreach ($merks as $merk)
-                                                        <option value="{{ $merk->kode_merk }}">{{ $merk->nama_merk }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('inputs.' . $index . '.merk_code')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <select wire:model.change="inputs.{{ $index }}.group_code"
-                                                    class="form-select form-select-sm @error('inputs.' . $index . '.group_code') is-invalid @enderror">
-                                                    <option value="">Pilih</option>
-                                                    @foreach ($groups as $group)
-                                                        <option value="{{ $group->kode_group }}">
-                                                            {{ $group->nama_group }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('inputs.' . $index . '.group_code')
-                                                    <div class="invalid-feedback-absolute">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="number" wire:model.blur="inputs.{{ $index }}.stok"
-                                                    class="form-control form-control-sm text-center">
-                                            </td>
-                                            <td class="text-center">
-                                                @if (count($inputs) > 1)
-                                                    <button type="button"
-                                                        wire:click="removeInput('{{ $item['id'] }}')"
-                                                        wire:loading.attr="disabled"
-                                                        wire:target="removeInput('{{ $item['id'] }}')"
-                                                        class="btn btn-soft-danger btn-sm border-0 shadow-sm">
+                    <div class="mt-3 d-flex justify-content-between">
+                        <button type="button" @click="add()"
+                            class="btn btn-success btn-rounded waves-effect waves-light mb-2">
+                            <i class="bx bx-plus label-icon"></i> Baris
+                        </button>
 
-                                                        <i wire:loading.remove
-                                                            wire:target="removeInput('{{ $item['id'] }}')"
-                                                            class="bx bx-trash font-size-16"></i>
+                        <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light mb-2">
+                            <i class="bx bx-save label-icon"></i>
+                            Simpan
+                        </button>
+                    </div>
 
-                                                        <span wire:loading
-                                                            wire:target="removeInput('{{ $item['id'] }}')"
-                                                            class="spinner-border spinner-border-sm" role="status">
-                                                        </span>
-                                                    </button>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-4 d-flex justify-content-between">
-                            <button type="button" wire:click="addInput" wire:loading.attr="disabled"
-                                class="btn btn-success btn-rounded waves-effect waves-light mb-2">
-
-                                <span wire:loading.remove wire:target="addInput">
-                                    <i class="bx bx-plus label-icon"></i> Baris
-                                </span>
-                                <span wire:loading wire:target="addInput">
-                                    <span class="spinner-border spinner-border-sm me-1" role="status"
-                                        aria-hidden="true"></span>
-                                    Sedang Menambah...
-                                </span>
-                            </button>
-
-                            <button type="button" wire:click="save"
-                                class="btn btn-success btn-rounded waves-effect waves-light mb-2">
-                                <i class="bx bx-save label-icon"></i>
-                                <span wire:loading.remove wire:target="save">Simpan</span>
-                                <span wire:loading wire:target="save">Sedang Menyimpan...</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
     <style>
-        /* Memastikan cell tabel punya posisi relatif */
-        table td {
-            position: relative;
-            vertical-align: top;
-            /* Pastikan input tetap di atas */
-            padding-bottom: 20px !important;
-            /* Beri ruang kosong di bawah untuk tempat error */
+        td.position-relative {
+            padding-bottom: 18px !important;
         }
 
-        /* Membuat pesan error melayang */
         .invalid-feedback-absolute {
             position: absolute;
             bottom: 2px;
-            left: 12px;
+            left: 8px;
             font-size: 10px;
-            white-space: nowrap;
-            display: block;
-            color: #f46a6a;
+            color: red;
+        }
+
+        .is-invalid {
+            border-color: red !important;
         }
     </style>
 </div>

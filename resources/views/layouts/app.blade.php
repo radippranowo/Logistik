@@ -69,10 +69,10 @@
 
                     <!-- App Search-->
                     <form class="app-search d-none d-lg-block">
-                        <div class="position-relative">
+                        {{-- <div class="position-relative">
                             <input type="text" class="form-control" placeholder="Search...">
                             <span class="bx bx-search-alt"></span>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
 
@@ -236,7 +236,7 @@
 
 
                         <li>
-                            <a wire:navigate href="{{route('dashboard.index') }}" class="waves-effect">
+                            <a wire:navigate.hover href="{{route('dashboard.index') }}" class="waves-effect">
                                 <i class="bx bx-chat"></i>
                                 <span key="t-chat">Dashboard</span>
                             </a>
@@ -248,10 +248,10 @@
                                 <span key="t-dashboards">Data Master</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a wire:navigate href="{{ route('barang.index') }}" key="t-tui-calendar">Barang</a></li>
-                                <li><a wire:navigate href="{{ route('category.index') }}"  key="t-full-calendar">Kategori</a>
-                                    <li><a wire:navigate href="{{ route('merk.index') }}"  key="t-full-calendar">Merk</a>
-                                        <li><a wire:navigate href="{{ route('group.index') }}"  key="t-full-calendar">Group</a>
+                                <li><a href="{{ route('barang.index') }}" wire:navigate.hover key="t-tui-calendar">Barang</a></li>
+                                <li><a href="{{ route('category.index') }}" wire:navigate.hover key="t-full-calendar">Kategori</a>
+                                    <li><a href="{{ route('merk.index') }}" wire:navigate.hover key="t-full-calendar">Merk</a>
+                                        <li><a href="{{ route('group.index') }}" wire:navigate.hover key="t-full-calendar">Group</a>
                                 </li>
                             </ul>
                         </li>

@@ -6,10 +6,10 @@
                     <div class="d-flex align-items-center">
                         <h5 class="mb-0 card-title flex-grow-1">BARANG</h5>
                         <div class="flex-shrink-0">
-                            <button wire:navigate href="{{ route('barang.create') }}" type="button"
-                                class="btn btn-success btn-rounded waves-effect waves-light mb-2">
+                            <a wire:navigate.hover href="{{ route('barang.create') }}"
+                                class="btn btn-success btn-rounded">
                                 <i class="mdi mdi-plus me-1"></i>Barang
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -19,14 +19,14 @@
                             <div class="d-flex align-items-center gap-2">
                                 <div class="search-box">
                                     <div class="position-relative">
-                                        <input wire:model.live.debounce.500ms="search" type="text"
+                                        <input id="search" name="search" wire:model.live.debounce.500ms="search" type="text"
                                             class="form-control btn-rounded" placeholder="Cari barang..."
                                             style="padding-left: 40px;">
                                         <i class="bx bx-search-alt search-icon" style="left: 13px;"></i>
                                     </div>
 
                                 </div>
-                                
+
                                 <div class="dropdown custom-no-anim">
                                     <button class="btn btn-light btn-rounded shadow-sm border dropdown-toggle"
                                         type="button" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -85,14 +85,15 @@
                                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                         <td> {{ $item->deskripsi }}</td>
                                         <td>
-                                                <a class="btn btn-sm btn-soft-info" wire:click="edit({{ $item->id }})"
-                                                    class="text-success" onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
-                                                    <i class="mdi mdi-pencil-outline "></i>
-                                                </a>
-                                                <a class="btn btn-sm btn-soft-danger"
-                                                    wire:click="$dispatch('confirm-delete', { id: {{ $item->id }}, nama: '{{ $item->nama_barang }}' })">
-                                                    <i class="mdi mdi-delete-outline"></i>
-                                                </a>
+                                            <a class="btn btn-sm btn-soft-info" wire:click="edit({{ $item->id }})"
+                                                class="text-success"
+                                                onclick="window.dispatchEvent(new CustomEvent('open-tambah-modal'))">
+                                                <i class="mdi mdi-pencil-outline "></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-soft-danger"
+                                                wire:click="$dispatch('confirm-delete', { id: {{ $item->id }}, nama: '{{ $item->nama_barang }}' })">
+                                                <i class="mdi mdi-delete-outline"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -113,75 +114,76 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ $isEdit ? 'Edit Barang' : 'Barang' }}</h5>
+                      
                         <button type="button" class="btn-close" @click="open = false"></button>
                     </div>
 
                     <form wire:submit.prevent="store">
                         <div class="modal-body">
                             <div class="row">
-                              <div class="col-md-4 mb-3">
-                                <label class="form-label">Kode Barang</label>
-                                <input type="text" wire:model="kode_barang"
-                                    class="form-control @error('kode_barang') is-invalid @enderror">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Part Number</label>
-                                <input type="text" wire:model="part_number" class="form-control">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Nama Barang</label>
-                                <input type="text" wire:model="nama_barang" class="form-control">
-                            </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="kode_barang" class="form-label">Kode Barang</label>
+                                    <input type="text" id="kode_barang" name="kode_barang" wire:model="kode_barang"
+                                        class="form-control @error('kode_barang') is-invalid @enderror">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="part_number" class="form-label">Part Number</label>
+                                    <input type="text" id="part_number" name="part_number" wire:model="part_number" class="form-control">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label  for="nama_barang" class="form-label">Nama Barang</label>
+                                    <input type="text" id="nama_barang" name="nama_barang" wire:model="nama_barang" class="form-control">
+                                </div>
 
-                            <div class="col-md-4 mb-3" wire:ignore>
-                                <label class="form-label">Kategori</label>
-                                <select wire:model="category_code" class="form-control select2">
-                                    <option value="">Pilih</option>
-                                    @foreach ($categories as $cat)
-                                        <option value="{{ $cat->kode_category }}">{{ $cat->nama_category }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3" wire:ignore>
-                                <label class="form-label">Merk</label>
-                                <select wire:model="merk_code" class="form-control select2">
-                                    <option value="">Pilih</option>
-                                    @foreach ($merks as $m)
-                                        <option value="{{ $m->kode_merk }}">{{ $m->nama_merk }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3" wire:ignore>
-                                <label class="form-label">Group</label>
-                                <select wire:model="group_code" class="form-control select2">
-                                    <option value="">Pilih</option>
-                                    @foreach ($groups as $g)
-                                        <option value="{{ $g->kode_group }}">{{ $g->nama_group }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <div class="col-md-4 mb-3" wire:ignore>
+                                    <label for="category_code" class="form-label">Kategori</label>
+                                    <select id="category_code" name="category_code" wire:model="category_code" class="form-control select2">
+                                        <option value="">Pilih</option>
+                                        @foreach ($categories as $cat)
+                                            <option value="{{ $cat->kode_category }}">{{ $cat->nama_category }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3" wire:ignore>
+                                    <label for="merk_code" class="form-label">Merk</label>
+                                    <select id="merk_code" name="merk_code" wire:model="merk_code" class="form-control select2">
+                                        <option value="">Pilih</option>
+                                        @foreach ($merks as $m)
+                                            <option value="{{ $m->kode_merk }}">{{ $m->nama_merk }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3" wire:ignore>
+                                    <label for="group_code" class="form-label">Group</label>
+                                    <select id="group_code" name="group_code" wire:model="group_code" class="form-control select2">
+                                        <option value="">Pilih</option>
+                                        @foreach ($groups as $g)
+                                            <option value="{{ $g->kode_group }}">{{ $g->nama_group }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Stok</label>
-                                <input type="number" wire:model="stok" class="form-control">
-                            </div>
-                            <div class="col-md-8 mb-3">
-                                <label class="form-label">Harga Satuan</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="number" wire:model="harga" class="form-control">
+                                <div class="col-md-4 mb-3">
+                                    <label for="stok" class="form-label">Stok</label>
+                                    <input type="number" id="stok" name="stok" wire:model="stok" class="form-control">
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label for="harga" class="form-label">Harga Satuan</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" id="harga" name="harga" wire:model="harga" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="deskripsi" class="form-label">Deskripsi</label>
+                                    <textarea id="deskripsi" name="deskripsi" wire:model="deskripsi" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
-
-                            <div class="col-12">
-                                <label class="form-label">Deskripsi</label>
-                                <textarea wire:model="deskripsi" class="form-control" rows="3"></textarea>
-                            </div>
-                            </div>
                         </div>
-                            
-                     
+
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="open = false">Close</button>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
